@@ -1,0 +1,36 @@
+# Install Arch Linux packages on top of initial install
+---
+- name: (Packages) Verify package lists
+  ansible.builtin.assert:
+    that:
+      - arch_common_pkg is defined
+      - arch_graphical_pkg is defined
+    fail_msg: "Arch package lists were not defined"
+  tags: packages
+
+- name: (Packages) Sync pacman.conf
+  become: yes
+  ansible.builtin.copy:
+    src: files/arch/pacman.conf
+    dest: /etc/pacman.conf
+    owner: root
+    group: root
+    mode: '0644'
+  tags: packages
+
+- name: (Packages) Install common packages
+  become: yes
+  community.general.pacman:
+    name: "{{ arch_common_pkg }}"
+    state: present
+    update_cache: yes
+  tags: packages
+
+- name: (Packages) Install graphical packages
+  become: yes
+  community.general.pacman:
+    name: "{{ arch_graphical_pkg }}"
+    state: present
+  when:
+    - install_graphics
+  tags: packages

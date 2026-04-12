@@ -1,0 +1,3 @@
+sys-apps/systemd kernel-install boot
+sys-apps/systemd-utils boot
+net-misc/networkmanager wifi

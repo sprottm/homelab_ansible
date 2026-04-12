@@ -1,0 +1,25 @@
+" Custom VIMRC
+" Needs to be linked to from home directory
+" /etc/vimrc is sourced in too early for noautoindent to work
+
+" I do not like my bash scripts being indented automatically
+set indentexpr=
+
+" I prefer to keep each line to one line of my screen
+set nowrap
+
+" Make it easy to identify what line I'm on and surrounding lines
+set number
+set cursorline
+
+" I write a lot of Python and YAML, where indentation is important. This cursor line is useful to me.
+set cursorcolumn
+
+" Disable auto-indentation
+set paste
+"
+" Syntax highighting is a MUST
+syntax on
+
+" Ensure auto indent is disabled
+set noautoindent

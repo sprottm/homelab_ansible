@@ -1,0 +1,36 @@
+---
+# Ensure we have a list of packages to install defined
+- name: Verify package lists were provided
+  ansible.builtin.assert:
+    that:
+      - gentoo_common_pkg is defined
+      - gentoo_graphical_pkg is defined
+    fail_msg: "Gentoo package lists were not defined"
+  tags: packages
+
+# Update our package cache before installing new packages
+- name: Update package cache for Gentoo systems
+  become: yes
+  portage:
+    sync: yes
+  when: ansible_os_family == "Gentoo"
+  tags: packages
+
+# Install Gentoo packages on Gentoo systems
+- name: Install common packages for Gentoo systems
+  become: yes
+  portage:
+    package: "{{ item }}"
+    state: present
+  loop: "{{ gentoo_common_pkg }}"
+  tags: packages
+
+- name: Install graphical packages for Gentoo systems
+  become: yes
+  portage:
+    package: "{{ item }}"
+    state: present
+  loop: "{{ gentoo_graphical_pkg }}"
+  when:
+    - install_graphics
+  tags: packages

@@ -1,0 +1,11 @@
+---
+- name: Set SSH to only accept pubkey and operate over a non-standard port
+  become: yes
+  ansible.builtin.template:
+    src: templates/sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0640'
+  notify: Restart sshd
+

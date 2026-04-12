@@ -1,0 +1,2 @@
+# Enable support for the LVM daemon and related tools
+sys-fs/lvm2 lvm

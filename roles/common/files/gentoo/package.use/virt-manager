@@ -1,0 +1,4 @@
+net-libs/gnutls pkcs11 tools
+net-dns/dnsmasq ipv6 script
+dev-libs/libunistring abi_x86_32
+dev-libs/nettle abi_x86_32

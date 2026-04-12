@@ -1,0 +1,138 @@
+#!/usr/bin/bash
+#
+# Customize my bash session
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Start tmux unless tmux is active or tmux is not installed
+if [[ -f /usr/bin/tmux && -z ${TMUX} ]]; then
+  session_name=$(tty | sed 's/[^a-zA-Z0-9]//g')
+  exec tmux new-session -A -s "$session_name" 'tmux set-option -g status-bg colour235; tmux set-option -g status-fg white; exec bash'
+fi
+
+###
+# some settings for hist control
+# Globals:
+#   none
+# Arguments:
+#   none
+# Outputs:
+#   HISTCONTROL
+#   HISTSIZE
+#   HISTFILESIZE
+###
+function apply_hist_settings() {
+
+  # don't put duplicate lines or lines starting with space in the history.
+  HISTCONTROL=ignoreboth
+
+  # append to the history file, don't overwrite it
+  shopt -s histappend
+
+  # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+  HISTSIZE=1000
+  HISTFILESIZE=2000
+
+}
+
+###
+# Style my terminal prompt, and set screenfetch to use these same colors
+# Globals:
+#   None
+# Arguments:
+#   None
+# Outputs:
+#   PS1
+#   screenfetch alias
+###
+function style_prompt() {
+
+  # Running Termux on Andorid works differently and needs to be styled differently.
+  if [[ $( uname -a | awk '{print $NF}' ) == "Android" ]]; then
+    local prompt_color=46
+    local phone_model=$( getprop ro.product.model )
+    PS1="\[\e[38;5;${prompt_color};1m\]\u @ ${phone_model} : \W > \[\e[0m\]"
+    alias screenfetch="screenfetch -c 219 -d '-wmtheme;-res;-gtk;-disk;-host' -n"
+    return
+  fi
+
+  # Since I use Arch Linux, I might not have inetutils or hostname on my device
+  local readonly my_hostname=$( cat /etc/hostname )
+  local readonly my_distro=$( cat /etc/os-release | grep -E "^ID=" | awk -F\= '{print $2}' ) 
+
+  # I want to style my interface differently depending on what type of machine I'm using. With my naming convention, this will tell me at a glance if I'm on a server, a personal computer, or a VM.
+  case ${my_distro} in
+    arch )
+      # Blue
+      local prompt_color=39
+    ;;
+
+    debian )
+      # Red
+      local prompt_color=196
+    ;;
+
+   gentoo )
+      # Pink
+      local prompt_color=219
+   ;;
+
+    * )
+      # Orange
+      local prompt_color=214
+    ;;
+  esac
+
+  # If root, turn the color darker. For orange, this will turn it to red.
+  if [[ $(whoami) == "root" ]]; then
+    local prompt_color=$(( ${prompt_color} - 18 ))
+  fi
+
+  # Set our prompt variable to display the user, host, and directory with our chosen color
+  PS1="\[\e[38;5;${prompt_color};1m\]\u @ \h : \W > \[\e[0m\]"
+
+  # I want screenfetch to use the prompt color as well
+  alias screenfetch="screenfetch -c 219 -d '-wmtheme;-res;-gtk;-disk;-host' -n"
+}
+function setup_gentoo_sound() {
+  local readonly my_distro=$( cat /etc/os-release | grep -E "^ID=" | awk -F\= '{print $2}' ) 
+  if [[ "${my_distro}" == "gentoo" ]]; then
+    systemctl --user enable --now pipewire-pulse.socket wireplumber.service
+    systemctl --user enable --now pipewire.service
+  fi
+}
+style_prompt
+
+# check the window size after each command and, if necessary, update the values of LINES and COLUMNS.                                                                                                                                   
+shopt -s checkwinsize
+ 
+# Use the "**" pattern for recursive globbing
+shopt -s globstar
+
+# Update my path to include my scripts
+if [[ $( whoami ) == "root" ]]; then
+  export PATH="${PATH}:/home/mike/Config/scripts"
+else
+  export PATH="${PATH}:${HOME}/Config/scripts"
+fi
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+#export PATH="$PATH:$HOME/.rvm/bin"
+
+source ~/.bash_aliases
+
+# Display system information
+screenfetch
+
+
+export EDITOR=/usr/bin/vim
+
+# Enable bash completion so I can use tab to complete bash commands
+bash_completion=/usr/share/bash-completion/bash_completion
+if [[ -f ${bash_completion} ]]; then
+  . ${bash_completion}
+fi
+
+# Customize the title of the terminal tab
+export PROMPT_COMMAND='echo -ne "\033]0;${PWD}\007"'

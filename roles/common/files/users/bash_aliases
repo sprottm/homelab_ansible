@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Aliases I expect to be set in my environment
+
+# Require interaction from commands which can delete files
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+
+# Some convenient shortcuts for ls
+alias ls='ls --color=auto'
+alias ll='ls -l'
+alias la='ls -A'
+
+# Shortcuts for grep 
+alias grep='grep --color=auto'
+
+# Check password easily
+alias pass='ansible-vault view /etc/ansible/pass.yml'

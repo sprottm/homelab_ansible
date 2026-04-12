@@ -1,0 +1,47 @@
+# Run validation tasks, then import common tasks by tag
+---
+# Check
+- name: (Check) Ensure required variables were provided
+  ansible.builtin.assert:
+    that:
+      - user is defined
+      - appcache is defined
+    fail_msg: "Required variables were not defined."
+  tags: always
+
+- name: (Check) Ensure username exists
+  ansible.builtin.user:
+    name: "{{ user }}"
+    state: present
+  register: user_info
+  tags: user
+
+# Packages
+- name: (Packages) Install packages on Arch Linux
+  ansible.builtin.include_tasks: install_arch_pkg.yaml
+  when: ansible_facts['os_family'] == "Archlinux"
+  tags: packages
+
+- name: (Packages) Install packages on Debian
+  ansible.builtin.include_tasks: install_deb_pkg.yaml
+  when: ansible_facts['os_family'] == "Debian"
+  tags: packages
+
+- name: (Packages) Install packages on Gentoo
+  ansible.builtin.include_tasks: install_gentoo_pkg.yaml
+  when: ansible_facts['os_family'] == "Gentoo"
+  tags: packages
+
+# Flatpak
+- name: (Flatpak) Install flatpak packages
+  ansible.builtin.include_tasks: install_flatpaks.yaml
+  tags: flatpak
+
+# Config
+- name: (Config) Configure user environment
+  ansible.builtin.include_tasks: configure_user.yaml
+  tags: user
+
+- name: (Config) Configure SSH
+  ansible.builtin.include_tasks: configure_ssh.yaml
+  tags: ssh

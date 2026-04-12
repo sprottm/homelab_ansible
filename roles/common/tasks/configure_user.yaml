@@ -1,0 +1,58 @@
+# For configuring my user account after an install
+---
+- name: (Configure User) Create Required Directories
+  ansible.builtin.file:
+    path: "{{ directory }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user_info.group }}"
+    mode: "0700"
+  loop:
+    - "{{ user_info.home }}/.config/unity3d/Team Cherry"
+    - "{{ user_info.home }}/.local/share"
+  loop_control:
+    loop_var: directory
+  tags: user
+
+- name: (Configure User) Deploy user dotfiles
+  ansible.builtin.copy:
+    src: "users/{{ dotfile.src }}"
+    dest: "{{ user_info.home }}/{{ dotfile.dest }}"
+    owner: "{{ user }}"
+    group: "{{ user_info.group }}"
+    mode: '0400'
+  loop:
+    - { src: 'bashrc', dest: '.bashrc' }
+    - { src: 'bash_aliases', dest: '.bash_aliases' }
+    - { src: 'gitconfig', dest: '.gitconfig' }
+    - { src: 'vimrc', dest: '.vimrc' }
+    - { src: 'alacritty.toml', dest: '.alacritty.toml' }
+  loop_control:
+    loop_var: dotfile
+  tags: user
+
+- name: (Configure User) Create application cache symlinks
+  ansible.builtin.file:
+    src: "{{ appcache }}/{{ symlink.src }}"
+    dest: "{{ user_info.home }}/{{ symlink.dest }}"
+    state: link
+    owner: "{{ user }}"
+    group: "{{ user_info.group }}"
+  loop:
+    - { src: 'newsboat', dest: '.newsboat' }
+    - { src: 'taskwarrior', dest: '.task' }
+    - { src: 'doom', dest: '.local/share/dsda-doom' }
+    - { src: 'quake', dest: '.ironwail' }
+    - { src: 'hk/save', dest: '.config/unity3d/Team Cherry/Hollow Knight' }
+  loop_control:
+    loop_var: symlink
+  tags: user
+
+- name: (Configure User) Configure Automount of gocryptfs for user
+  become: true
+  template:
+    src: templates/pam_mount.conf.xml
+    dest: /etc/security/pam_mount.conf.xml
+    owner: "{{ user }}"
+    group: "{{ user_info.group }}"
+    mode: '0644'
