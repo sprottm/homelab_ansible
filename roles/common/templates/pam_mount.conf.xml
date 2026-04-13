@@ -1,14 +1,16 @@
-<volume
-    fstype="fuse"
-    mountpoint="/home/{{ user }}/Pictures"
-    path="/usr/bin/gocryptfs#{{ external_pics }}"
-    options="nodev,nosuid"
-    user="{{ user }}"
-/>
-<volume
-    fstype="fuse"
-    mountpoint="/home/{{ user }}/Documents"
-    path="/usr/bin/gocryptfs#{{ external_docs }}"
-    options="nodev,nosuid"
-    user="{{ user }}"
-/>
+<pam_mount>
+    <volume
+        fstype="fuse"
+        mountpoint="/home/{{ user }}/Pictures"
+        path="/usr/bin/gocryptfs#{{ external_pics }}"
+        options="nodev,nosuid"
+        user="{{ user }}"
+    />
+    <volume
+        fstype="fuse"
+        mountpoint="/home/{{ user }}/Documents"
+        path="/usr/bin/gocryptfs#{{ external_docs }}"
+        options="nodev,nosuid"
+        user="{{ user }}"
+    />
+</pam_mount>
