@@ -43,6 +43,7 @@
     - { src: 'taskwarrior', dest: '.task' }
     - { src: 'doom', dest: '.local/share/dsda-doom' }
     - { src: 'quake', dest: '.ironwail' }
+    - { src: 'openxcom', dest: '.local/share/openxcom' }
     - { src: 'hk/save', dest: '.config/unity3d/Team Cherry/Hollow Knight' }
   loop_control:
     loop_var: symlink
