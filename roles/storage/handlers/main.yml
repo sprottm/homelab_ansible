@@ -1,0 +1,8 @@
+---
+- name: Enable backup timer
+  become: yes
+  systemd:
+    name: backup-fileserver.timer
+    state: started
+    enabled: yes
+

@@ -57,3 +57,4 @@
     owner: "{{ user }}"
     group: "{{ user_info.group }}"
     mode: '0644'
+  tags: user

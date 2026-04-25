@@ -1,0 +1,13 @@
+[Unit]
+Description=Nightly backups of my fileserver
+After=network.target
+Requires=network.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/files/bash/file_server_backup.sh
+StandardOutput=append:/var/log/custom/backup_fileserver.log
+StandardError=append:/var/log/custom/backup_fileserver_error.log
+WorkingDirectory=/files/bash
+

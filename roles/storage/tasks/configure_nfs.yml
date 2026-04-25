@@ -1,0 +1,15 @@
+---
+- name: Add /files to be exported
+  become: yes
+  lineinfile:
+    path: /etc/exports
+    line: '/files    *(rw,sync,no_root_squash)'
+    state: present
+
+- name: Enable and start NFS server service
+  become: yes
+  systemd:
+    name: nfs-server
+    state: started
+    enabled: yes
+
