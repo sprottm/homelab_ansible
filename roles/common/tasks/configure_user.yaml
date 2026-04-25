@@ -1,6 +1,6 @@
 # For configuring my user account after an install
 ---
-- name: (Configure User) Create Required Directories
+- name: (User) Create Required Directories
   ansible.builtin.file:
     path: "{{ directory }}"
     state: directory
@@ -14,7 +14,7 @@
     loop_var: directory
   tags: user
 
-- name: (Configure User) Deploy user dotfiles
+- name: (User) Deploy user dotfiles
   ansible.builtin.copy:
     src: "users/{{ dotfile.src }}"
     dest: "{{ user_info.home }}/{{ dotfile.dest }}"
@@ -31,7 +31,7 @@
     loop_var: dotfile
   tags: user
 
-- name: (Configure User) Create application cache symlinks
+- name: (User) Create application cache symlinks
   ansible.builtin.file:
     src: "{{ appcache }}/{{ symlink.src }}"
     dest: "{{ user_info.home }}/{{ symlink.dest }}"
@@ -49,12 +49,22 @@
     loop_var: symlink
   tags: user
 
-- name: (Configure User) Configure Automount of gocryptfs for user
+- name: (User) Configure Automount of gocryptfs for user
   become: true
   template:
     src: templates/pam_mount.conf.xml
     dest: /etc/security/pam_mount.conf.xml
     owner: "{{ user }}"
     group: "{{ user_info.group }}"
+    mode: '0644'
+  tags: user
+
+- name: (User) Configure Automount during login
+  become: true
+  template:
+    src: files/pam/lightdm
+    dest: /etc/pam.d/lightdm
+    owner: root
+    group: root
     mode: '0644'
   tags: user
