@@ -42,6 +42,7 @@
     - { src: 'newsboat', dest: '.newsboat' }
     - { src: 'taskwarrior', dest: '.task' }
     - { src: 'doom', dest: '.local/share/dsda-doom' }
+    - { src: 'doom3', dest: '.local/share/dhewm3' }
     - { src: 'quake', dest: '.ironwail' }
     - { src: 'openxcom', dest: '.local/share/openxcom' }
     - { src: 'hk/save', dest: '.config/unity3d/Team Cherry/Hollow Knight' }
