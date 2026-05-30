@@ -10,7 +10,7 @@
     - '/backup'
   loop_control:
     loop_var: mountpoint
-  tags: storage
+
 - name: (STORAGE) Mount primary drives
   become: true
   ansible.posix.mount:
@@ -24,4 +24,3 @@
     - {src: 'LABEL=backupfiles', path: '/backup/files', fs: 'xfs'}
   loop_control:
     loop_var: mount
-  tags: storage

@@ -1,16 +1,15 @@
-# Install Arch Linux packages on top of initial install
+# Install Debian packages on top of initial install
 ---
-- name: (Install Packages) Verify package lists
+- name: (PKG) Verify package lists
   ansible.builtin.assert:
     that:
       - debian_common_pkg is defined
+    success_msg: "Debian package lists were defined"
     fail_msg: "Debian package lists were not defined"
-  tags: packages
 
-- name: (Install Packages) Install common packages
-  become: yes
+- name: (PKG) Install common packages
+  become: true
   ansible.builtin.apt:
     name: "{{ debian_common_pkg }}"
     state: present
     update_cache: yes
-  tags: packages

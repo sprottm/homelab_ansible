@@ -12,7 +12,6 @@
     - "{{ user_info.home }}/.local/share"
   loop_control:
     loop_var: directory
-  tags: user
 
 - name: (User) Deploy user dotfiles
   ansible.builtin.copy:
@@ -29,7 +28,6 @@
     - { src: 'alacritty.toml', dest: '.alacritty.toml' }
   loop_control:
     loop_var: dotfile
-  tags: user
 
 - name: (User) Create application cache symlinks
   ansible.builtin.file:
@@ -48,7 +46,6 @@
     - { src: 'hk/save', dest: '.config/unity3d/Team Cherry/Hollow Knight' }
   loop_control:
     loop_var: symlink
-  tags: user
 
 - name: (User) Configure Automount of gocryptfs for user
   become: true
@@ -58,7 +55,6 @@
     owner: "{{ user }}"
     group: "{{ user_info.group }}"
     mode: '0644'
-  tags: user
 
 - name: (User) Configure Automount during login
   become: true
@@ -68,4 +64,3 @@
     owner: root
     group: root
     mode: '0644'
-  tags: user

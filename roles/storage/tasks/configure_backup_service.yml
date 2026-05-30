@@ -1,14 +1,16 @@
+# Tasks for setting up automated backups of my fileserver
 ---
 - name: (STORAGE) Create directory for backup-fileserver logs
-  become: yes
+  become: true
   ansible.builtin.file:
     path: /var/log/custom
     state: directory
+    owner: root
+    group: root
     mode: '0750'
-  tags: storage
 
 - name: (STORAGE) Copy timer for backup-filserver.service
-  become: yes
+  become: true
   ansible.builtin.copy:
     src: backup-fileserver.timer
     dest: /etc/systemd/system/backup-fileserver.timer
@@ -16,22 +18,12 @@
     group: root
     mode: '0640'
   notify: Enable backup timer
-  tags: storage
 
 - name: (STORAGE) Copy backup-fileserver.service
-  become: yes
+  become: true
   ansible.builtin.copy:
     src: backup-fileserver.service
     dest: /etc/systemd/system/backup-fileserver.service
     owner: root
     group: root
     mode: '0640'
-  tags: storage
-
-- name: (STORAGE) Enable backup-fileserver units
-  become: yes
-  ansible.builtin.service:
-    name: "backup-fileserver.timer"
-    enabled: true
-    state: started
-  tags: storage

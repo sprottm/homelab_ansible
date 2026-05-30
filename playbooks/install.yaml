@@ -1,7 +1,25 @@
+# Playbook for configuration after a fresh install
 ---
-- hosts: all
+- hosts: "{{ target_hosts }}"
   gather_facts: true
-  roles:
-    - role: common
-    - role: storage
-    - role: hypervisor
+  vars_prompt:
+    - name: target_hosts
+      prompt: "Target Hosts"
+      private: false
+  tasks:
+    - ansible.builtin.include_role:
+        name: common
+      tags:
+        - pkg
+        - flatpak
+        - user
+        - ssh 
+    - ansible.builtin.include_role:
+        name: storage
+      tags:
+        - storage
+        - exports
+    - ansible.builtin.include_role:
+        name: hypervisor
+      tags:
+        - hypervisor

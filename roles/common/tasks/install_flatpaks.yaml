@@ -7,7 +7,6 @@
     state: present
     flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
     method: system
-  tags: flatpak
 
 - name: (Flatpak) Install system Flatpak apps
   become: true
@@ -21,4 +20,3 @@
     - com.usebottles.bottles
   loop_control:
     loop_var: flatpak
-  tags: flatpak

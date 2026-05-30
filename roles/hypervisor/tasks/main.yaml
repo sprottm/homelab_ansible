@@ -3,15 +3,11 @@
 - name: Enable libvirtd socket
   become: yes
   ansible.builtin.service:
-    name: libvirtd.socket
+    name: "{{ systemd_unit }}"
     enabled: true
     state: started
-  tags: hypervisor
-
-- name: Enable libvirtd service
-  become: yes
-  ansible.builtin.service:
-    name: libvirtd.service
-    enabled: true
-    state: started
-  tags: hypervisor
+  loop:
+    - 'libvirtd.socket'
+    - 'libvirtd.service'
+  loop_control:
+    loop_var: systemd_unit

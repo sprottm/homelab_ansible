@@ -1,0 +1,3 @@
+# Default variables for package installs
+---
+graphics_enabled: false

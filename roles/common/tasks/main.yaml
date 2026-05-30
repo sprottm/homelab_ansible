@@ -1,11 +1,11 @@
 # Run validation tasks, then import common tasks by tag
 ---
-# Check
 - name: (Check) Ensure required variables were provided
   ansible.builtin.assert:
     that:
       - user is defined
       - appcache is defined
+    success_msg: "Required variables were not defined."
     fail_msg: "Required variables were not defined."
   tags: always
 
@@ -16,32 +16,34 @@
   register: user_info
   tags: user
 
-# Packages
-- name: (Packages) Install packages on Arch Linux
-  ansible.builtin.include_tasks: install_arch_pkg.yaml
-  when: ansible_facts['os_family'] == "Archlinux"
-  tags: packages
+- name: (PKG) Install packages on Arch Linux
+  ansible.builtin.include_tasks:
+    file: "install_{{ ansible_facts['os_family'] | lower }}_pkg.yaml"
+    apply:
+      tags:
+        - pkg
+  tags: pkg
 
-- name: (Packages) Install packages on Debian
-  ansible.builtin.include_tasks: install_deb_pkg.yaml
-  when: ansible_facts['os_family'] == "Debian"
-  tags: packages
-
-- name: (Packages) Install packages on Gentoo
-  ansible.builtin.include_tasks: install_gentoo_pkg.yaml
-  when: ansible_facts['os_family'] == "Gentoo"
-  tags: packages
-
-# Flatpak
-- name: (Flatpak) Install flatpak packages
-  ansible.builtin.include_tasks: install_flatpaks.yaml
+- name: (FLATPAK) Install flatpak packages
+  ansible.builtin.include_tasks:
+    file: install_flatpaks.yaml
+    apply:
+      tags:
+        - flatpak
   tags: flatpak
 
-# Config
-- name: (Config) Configure user environment
-  ansible.builtin.include_tasks: configure_user.yaml
+- name: (USER) Configure user environment
+  ansible.builtin.include_tasks:
+    file: configure_user.yaml
+    apply:
+      tags:
+        - user
   tags: user
 
-- name: (Config) Configure SSH
-  ansible.builtin.include_tasks: configure_ssh.yaml
+- name: (SSH) Configure SSH
+  ansible.builtin.include_tasks:
+    file: configure_ssh.yaml
+    apply:
+      tags:
+        - ssh
   tags: ssh
