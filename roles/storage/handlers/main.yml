@@ -5,4 +5,3 @@
     name: backup-fileserver.timer
     state: started
     enabled: yes
-

@@ -6,7 +6,7 @@
     that:
       - gentoo_common_pkg is defined
       - gentoo_graphical_pkg is defined
-    fail_msg: "Gentoo package lists were defined"
+    success_msg: "Gentoo package lists were defined"
     fail_msg: "Gentoo package lists were not defined"
 
 # Update our package cache before installing new packages
