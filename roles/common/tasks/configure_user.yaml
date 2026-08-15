@@ -44,6 +44,9 @@
     - { src: 'quake', dest: '.ironwail' }
     - { src: 'openxcom', dest: '.local/share/openxcom' }
     - { src: 'hk/save', dest: '.config/unity3d/Team Cherry/Hollow Knight' }
+    - { src: 'inscryption/save', dest: '.config/unity3d/Daniel Mullins Games' }
+    - { src: 'rogue-trivia-tui', dest: '.local/share/rogue-trivia-tui' }
+    - { src: 'game-library-tui', dest: '.local/share/game-library-tui' }
   loop_control:
     loop_var: symlink
 

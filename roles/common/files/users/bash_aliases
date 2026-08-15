@@ -17,3 +17,12 @@ alias grep='grep --color=auto'
 
 # Check password easily
 alias pass='ansible-vault view /etc/ansible/pass.yml'
+
+# Open games library easily
+alias library='/files/python/game-library-tui/library.py'
+
+# Open gallery easily
+alias gallery='/files/python/gallery-filter-tui/gallery.py'
+
+# Open trivia game easily
+alias trivia='/files/python/rogue-trivia-tui/trivia.py'
