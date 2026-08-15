@@ -1,3 +1,13 @@
-# Default variables for package installs
+# Default variables for the common role if not predefined
 ---
+# Used for package installations
 graphics_enabled: false
+arch_common_pkgs: []
+arch_graphical_pkgs: []
+debian_common_pkgs: []
+gentoo_common_pkgs: []
+gentoo_graphical_pkgs: []
+flatpaks_to_install: []
+
+# Used for user configuration
+user_symlinks: []

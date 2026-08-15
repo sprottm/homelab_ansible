@@ -1,0 +1,20 @@
+# Configure ClamAV to ensure new files are scanned
+---
+- name: Ensure that the clamav database is being refreshed daily
+  become: true
+  ansible.builtin.service:
+    name: clamav-freshclam.service
+    enabled: true
+    state: started
+
+- name: Scan new files for malware signatures
+  become: true
+  ansible.builtin.service:
+    name: "{{ clamav_onaccess }}"
+    enabled: true
+    state: started
+  loop:
+    - clamav-daemon.service
+    - clamav-clamonacc.service
+  loop_control:
+    loop_var: clamav_onaccess

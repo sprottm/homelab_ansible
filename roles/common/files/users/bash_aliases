@@ -2,6 +2,10 @@
 #
 # Aliases I expect to be set in my environment
 
+#
+# MANAGED BY ANSIBLE
+#
+
 # Require interaction from commands which can delete files
 alias cp='cp -i'
 alias mv='mv -i'
@@ -16,7 +20,7 @@ alias la='ls -A'
 alias grep='grep --color=auto'
 
 # Check password easily
-alias pass='ansible-vault view /etc/ansible/pass.yml'
+alias pass='ansible-vault view /etc/ansible/pass.yaml'
 
 # Open games library easily
 alias library='/files/python/game-library-tui/library.py'

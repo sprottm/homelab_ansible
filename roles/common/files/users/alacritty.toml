@@ -1,5 +1,9 @@
 # Upstream: github.com/bluz71/vim-moonfly-colors
 
+#
+# MANAGED BY ANSIBLE
+#
+
 [font]
 size = 14.0
 

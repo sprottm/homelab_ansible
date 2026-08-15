@@ -1,11 +1,11 @@
-# Install Gentoo packages on top of initial install
+# Install custom list of packages on top of initial install
 ---
 # Ensure we have a list of packages to install defined
 - name: Verify package lists were provided
   ansible.builtin.assert:
     that:
-      - gentoo_common_pkg is defined
-      - gentoo_graphical_pkg is defined
+      - gentoo_common_pkgs is defined
+      - gentoo_graphical_pkgs is defined
     success_msg: "Gentoo package lists were defined"
     fail_msg: "Gentoo package lists were not defined"
 
@@ -19,15 +19,19 @@
 - name: Install common packages for Gentoo systems
   become: true
   portage:
-    package: "{{ item }}"
+    package: "{{ common_pkg }}"
     state: present
-  loop: "{{ gentoo_common_pkg }}"
+  loop: "{{ gentoo_common_pkgs }}"
+  loop_control:
+    loop_var: common_pkg
 
 - name: Install graphical packages for Gentoo systems
   become: true
   portage:
-    package: "{{ item }}"
+    package: "{{ graphical_pkg }}"
     state: present
-  loop: "{{ gentoo_graphical_pkg }}"
+  loop: "{{ gentoo_graphical_pkgs }}"
+  loop_control:
+    loop_var: graphical_pkg
   when:
     - graphics_enabled

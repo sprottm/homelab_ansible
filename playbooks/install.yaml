@@ -9,17 +9,10 @@
   tasks:
     - ansible.builtin.include_role:
         name: common
-      tags:
-        - pkg
-        - flatpak
-        - user
-        - ssh 
+      tags: ['always']
     - ansible.builtin.include_role:
         name: storage
-      tags:
-        - storage
-        - exports
+      tags: ['storage', 'exports']
     - ansible.builtin.include_role:
         name: hypervisor
-      tags:
-        - hypervisor
+      tags: ['hypervisor']

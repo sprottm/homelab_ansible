@@ -1,3 +1,7 @@
+"
+" MANAGED BY ANSIBLE
+"
+
 " Custom VIMRC
 " Needs to be linked to from home directory
 " /etc/vimrc is sourced in too early for noautoindent to work
@@ -23,3 +27,6 @@ syntax on
 
 " Ensure auto indent is disabled
 set noautoindent
+
+" Set ruler so I can verify that I am keeping lines to a certain character limit as determined by linter
+set ruler

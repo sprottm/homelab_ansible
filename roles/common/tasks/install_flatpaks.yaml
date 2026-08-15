@@ -1,6 +1,6 @@
 # Install flatpak applications for the systen
 ---
-- name: (Flatpak) Add the Flathub repository
+- name: Add the Flathub repository
   become: true
   community.general.flatpak_remote:
     name: flathub
@@ -8,15 +8,12 @@
     flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
     method: system
 
-- name: (Flatpak) Install system Flatpak apps
+- name: Install system Flatpak apps
   become: true
   community.general.flatpak:
     name: "{{ flatpak }}"
     state: present
     method: system
-  loop:
-    - com.valvesoftware.Steam
-    - com.github.tchx84.Flatseal
-    - com.usebottles.bottles
+  loop: "{{ flatpaks_to_install }}"
   loop_control:
     loop_var: flatpak

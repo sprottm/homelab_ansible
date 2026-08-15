@@ -2,6 +2,10 @@
 #
 # Customize my bash session
 
+#
+# MANAGED BY ANSIBLE
+#
+
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
@@ -73,7 +77,7 @@ function style_prompt() {
       local prompt_color=196
     ;;
 
-   gentoo )
+    gentoo )
       # Pink
       local prompt_color=219
    ;;
@@ -95,6 +99,7 @@ function style_prompt() {
   # I want screenfetch to use the prompt color as well
   alias screenfetch="screenfetch -c 219 -d '-wmtheme;-res;-gtk;-disk;-host' -n"
 }
+
 function setup_gentoo_sound() {
   local readonly my_distro=$( cat /etc/os-release | grep -E "^ID=" | awk -F\= '{print $2}' ) 
   if [[ "${my_distro}" == "gentoo" ]]; then
@@ -124,7 +129,6 @@ source ~/.bash_aliases
 
 # Display system information
 screenfetch
-
 
 export EDITOR=/usr/bin/vim
 

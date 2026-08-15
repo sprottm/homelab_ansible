@@ -1,15 +1,15 @@
-# Install Debian packages on top of initial install
+# Install custom list of packages on top of initial install
 ---
-- name: (PKG) Verify package lists
+- name: Verify package lists
   ansible.builtin.assert:
     that:
-      - debian_common_pkg is defined
+      - debian_common_pkgs is defined
     success_msg: "Debian package lists were defined"
     fail_msg: "Debian package lists were not defined"
 
-- name: (PKG) Install common packages
+- name: Install common packages
   become: true
   ansible.builtin.apt:
-    name: "{{ debian_common_pkg }}"
+    name: "{{ debian_common_pkgs }}"
     state: present
     update_cache: yes
