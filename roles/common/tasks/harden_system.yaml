@@ -1,0 +1,44 @@
+# Apply hardening recommendations from lynis
+---
+- name: Ensure prerequisite directories are in-place
+  become: true
+  ansible.builtin.file:
+    path: "{{ prereq_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - /etc/security/limits.d
+  loop_control:
+    loop_var: prereq_dir
+
+- name: Ensure core dumps are disabled
+  become: true
+  ansible.builtin.copy:
+    src: "files/hardening/{{ coredump.src }}"
+    dest: "{{ coredump.dest }}"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
+  loop:
+    - {src: coredump.conf, dest: /etc/systemd/coredump.conf}
+    - {src: disable_coredump.sh, dest: /etc/profile.d/disable_coredump.sh}
+    - {src: limit_coredump, dest: /etc/security/limits.d/limit_coredump}
+  loop_control:
+    loop_var: coredump
+
+- name: Configure password hashing rounds
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    line: "{{ hash_rounds.line }}"
+    regexp: "{{ hash_rounds.regex }}"
+    state: present 
+    backup: true
+  loop:
+    - {line: 'SHA_CRYPT_MIN_ROUNDS 5000', regex: '^#?\s*SHA_CRYPT_MIN_ROUNDS'}
+    - {line: 'SHA_CRYPT_MAX_ROUNDS 5000', regex: '^#?\s*SHA_CRYPT_MAX_ROUNDS'}
+  loop_control:
+    loop_var: hash_rounds

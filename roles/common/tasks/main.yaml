@@ -57,3 +57,10 @@
     apply:
       tags: ['common', 'firewall']
   tags: ['common', 'firewall']
+
+- name: (HARDEN) Apply general security hardening on our system
+  ansible.builtin.include_tasks:
+    file: harden_system.yaml
+    apply:
+      tags: ['common', 'harden']
+  tags: ['common', 'harden']
