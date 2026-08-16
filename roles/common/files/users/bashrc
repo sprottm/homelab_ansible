@@ -97,7 +97,7 @@ function style_prompt() {
   PS1="\[\e[38;5;${prompt_color};1m\]\u @ \h : \W > \[\e[0m\]"
 
   # I want screenfetch to use the prompt color as well
-  alias screenfetch="screenfetch -c 219 -d '-wmtheme;-res;-gtk;-disk;-host' -n"
+  alias screenfetch="screenfetch -c ${prompt_color} -d '-wmtheme;-res;-gtk;-disk;-host' -n"
 }
 
 function setup_gentoo_sound() {

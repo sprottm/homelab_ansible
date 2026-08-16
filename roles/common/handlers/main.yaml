@@ -4,4 +4,9 @@
   ansible.builtin.service:
     name: sshd
     state: reloaded
-    enabled: true
+
+- name: Restart usbguard
+  become: true
+  ansible.builtin.service:
+    name: usbguard
+    state: restarted

@@ -29,16 +29,80 @@
   loop_control:
     loop_var: coredump
 
-- name: Configure password hashing rounds
+- name: Configure security settings in login.defs
   become: true
   ansible.builtin.lineinfile:
     path: /etc/login.defs
-    line: "{{ hash_rounds.line }}"
-    regexp: "{{ hash_rounds.regex }}"
+    line: "{{ logindef.line }}"
+    regexp: "{{ logindef.regex }}"
     state: present 
-    backup: true
   loop:
-    - {line: 'SHA_CRYPT_MIN_ROUNDS 5000', regex: '^#?\s*SHA_CRYPT_MIN_ROUNDS'}
-    - {line: 'SHA_CRYPT_MAX_ROUNDS 5000', regex: '^#?\s*SHA_CRYPT_MAX_ROUNDS'}
+    - {line: 'SHA_CRYPT_MIN_ROUNDS 5000', regex: '^#?\s*SHA_CRYPT_MIN_ROUNDS\s'}
+    - {line: 'SHA_CRYPT_MAX_ROUNDS 5000', regex: '^#?\s*SHA_CRYPT_MAX_ROUNDS\s'}
+    - {line: 'PASS_MIN_DAYS 5', regex: '^#?\s*PASS_MIN_DAYS\s'}
+    - {line: 'PASS_MAX_DAYS 60', regex: '^#?\s*PASS_MAX_DAYS\s'}
+    - {line: 'UMASK 027', regex: '^#?\s*UMASK\s'}
+    - {line: 'FAILLOG_ENAB yes', regex: '^#?\s*FAILLOG_ENAB\s'}
   loop_control:
-    loop_var: hash_rounds
+    loop_var: logindef
+
+- name: Set shell timeout
+  become: true
+  ansible.builtin.copy:
+    src: files/hardening/timeout.sh
+    dest: /etc/profile.d/timeout.sh
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Disable modules I do not need
+  become: true
+  ansible.builtin.template:
+    src: templates/hardening/blacklist_module.j2
+    dest: "/etc/modprobe.d/blacklist_{{ blacklist_module }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - cramfs
+    - hfs
+    - hfsplus
+    - jffs2
+    - udf
+    - firewire-ohci
+    - firewire-core
+    - firewire-sbp2
+    - firewire-net
+  loop_control:
+    loop_var: blacklist_module
+
+- name: Generate baseline usbguard policy from connected devices
+  ansible.builtin.command:
+    cmd: usbguard generate-policy
+  register: usbguard_policy
+  changed_when: false
+
+- name: Write baseline policy for usbguard
+  become: true
+  ansible.builtin.copy:
+    content: "{{ usbguard_policy.stdout }}"
+    dest: /etc/usbguard/rules.conf
+    owner: root
+    group: root
+    mode: '0600'
+  notify: Restart usbguard
+
+- name: Ensure we apply the policy for currently connected usb-controllers
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/usbguard/usbguard-daemon.conf
+    line: PresentControllerPolicy=apply-policy
+    regexp: '^#?\s*PresentControllerPolicy='
+    state: present 
+
+- name: Ensure usbguard is enabled and started
+  become: true
+  ansible.builtin.service:
+    name: usbguard
+    enabled: true
+    state: started

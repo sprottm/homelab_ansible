@@ -1,0 +1,5 @@
+#
+# MANAGED BY ANSIBLE
+#
+
+export TMOUT=600

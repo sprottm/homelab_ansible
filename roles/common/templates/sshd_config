@@ -115,6 +115,9 @@ PasswordAuthentication no
 # override default of no subsystems
 Subsystem	sftp	/usr/lib/ssh/sftp-server
 
+# Only allow SSH access to primary system user
+AllowUsers	{{ user }}
+
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
 #	X11Forwarding no
