@@ -1,24 +1,25 @@
+# Ensure that common mountpoints are mounted securely
 ---
-- name: Reload sshd
+- name: Ensure users that need to be in the proc group are added
   become: true
-  ansible.builtin.service:
-    name: sshd
-    state: reloaded
+  ansible.builtin.user:
+    user: "{{ proc_user }}"
+    groups: proc
+    append: true
+  loop:
+    - polkitd
+    - "{{ user }}"
+  loop_control:
+    loop_var: proc_user
 
-- name: Restart usbguard
-  become: true
-  ansible.builtin.service:
-    name: usbguard
-    state: restarted
-
-- name: Secure active mounts
+- name: Apply secure mount settings in fstab
   become: true
   ansible.posix.mount:
     path: "{{ lookup('vars', mount + '_mountpoint') }}"
     src: "{{ lookup('vars', mount + '_volume') }}"
     fstype: "{{ lookup('vars', mount + '_type') }}"
     opts: "{{ lookup('vars', mount + '_opts') }}"
-    state: remounted
+    state: present
   loop:
     - boot
     - dev
@@ -31,3 +32,4 @@
     - audit
   loop_control:
     loop_var: mount
+  notify: Secure active mounts

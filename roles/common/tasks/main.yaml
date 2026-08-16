@@ -64,3 +64,10 @@
     apply:
       tags: ['common', 'harden']
   tags: ['common', 'harden']
+
+- name: (HARDEN) Ensure we have secure options on our mounts
+  ansible.builtin.include_tasks:
+    file: configure_secure_mounts.yaml
+    apply:
+      tags: ['common', 'harden']
+  tags: ['common', 'harden']

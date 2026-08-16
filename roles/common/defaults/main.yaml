@@ -11,3 +11,51 @@ flatpaks_to_install: []
 
 # Used for user configuration
 user_symlinks: []
+user_req_directories: []
+user_dotfiles: []
+
+# Used for secure mounts
+boot_volume: /dev/nvme0n1p1
+boot_mountpoint: /boot
+boot_type: vfat
+boot_opts: defaults,nosuid,nodev,noexec
+
+dev_volume: devtmpfs
+dev_mountpoint: /dev
+dev_type: devtmpfs
+dev_opts: defaults,nosuid,noexec
+
+devshm_volume: tmpfs
+devshm_mountpoint: /dev/shm
+devshm_type: tmpfs
+devshm_opts: defaults,nosuid,nodev,noexec
+
+proc_volume: proc
+proc_mountpoint: /proc
+proc_type: proc
+proc_opts: defaults,nosuid,nodev,noexec,hidepid=1
+
+home_volume: /dev/mapper/vgroot-lv_home
+home_mountpoint: /home
+home_type: xfs
+home_opts: defaults,nosuid,nodev
+
+tmp_volume: /dev/mapper/vgroot-lv_tmp
+tmp_mountpoint: /tmp
+tmp_type: xfs
+tmp_opts: defaults,nosuid,nodev,noexec
+
+var_volume: /dev/mapper/vgroot-lv_var
+var_mountpoint: /var
+var_type: xfs
+var_opts: defaults,nosuid,nodev
+
+log_volume: /dev/mapper/vgroot-lv_log
+log_mountpoint: /var/log
+log_type: xfs
+log_opts: defaults,nosuid,nodev,noexec
+
+audit_volume: /dev/mapper/vgroot-lv_audit
+audit_mountpoint: /var/log/audit
+audit_type: xfs
+audit_opts: defaults,nosuid,nodev,noexec
