@@ -58,8 +58,8 @@
 - name: Disable modules I do not need
   become: true
   ansible.builtin.template:
-    src: templates/hardening/blacklist_module.j2
-    dest: "/etc/modprobe.d/blacklist_{{ blacklist_module }}"
+    src: templates/hardening/blacklist_module.conf.j2
+    dest: "/etc/modprobe.d/blacklist_{{ blacklist_module }}.conf"
     owner: root
     group: root
     mode: '0644'
@@ -106,3 +106,13 @@
     name: usbguard
     enabled: true
     state: started
+
+- name: Configure sysctl hardening
+  become: true
+  ansible.builtin.copy:
+    src: "files/hardening/99-hardening.conf"
+    dest: "/etc/sysctl.d/99-hardening.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload sysctl

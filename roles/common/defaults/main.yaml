@@ -33,7 +33,7 @@ devshm_opts: defaults,nosuid,nodev,noexec
 proc_volume: proc
 proc_mountpoint: /proc
 proc_type: proc
-proc_opts: defaults,nosuid,nodev,noexec,hidepid=1
+proc_opts: defaults,nosuid,nodev,noexec,hidepid=2
 
 home_volume: /dev/mapper/vgroot-lv_home
 home_mountpoint: /home
