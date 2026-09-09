@@ -1,7 +1,7 @@
 ---
 - name: (STORAGE) Configure drive mounts
   ansible.builtin.include_tasks:
-    file: mount_drives.yml
+    file: mount_drives.yaml
     apply:
       tags:
         - storage
@@ -9,7 +9,7 @@
 
 - name: (STORAGE) Configure drives to be backed up
   ansible.builtin.include_tasks:
-    file: configure_backup_service.yml
+    file: configure_backup_service.yaml
     apply:
       tags:
         - storage
@@ -17,7 +17,7 @@
 
 - name: (EXPORTS) Export the drives out to the network
   ansible.builtin.include_tasks:
-    file: configure_nfs.yml 
+    file: configure_nfs.yaml 
     apply:
       tags:
         - exports

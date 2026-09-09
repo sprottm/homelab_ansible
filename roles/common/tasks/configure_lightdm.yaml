@@ -1,0 +1,11 @@
+# Ensure lightdm is configured to use chosen greeter
+---
+- name: Ensure that lightdm is using custom greeter
+  become: true
+  ansible.builtin.copy:
+    src: files/lightdm.conf
+    dest: /etc/lightdm/lightdm.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true

@@ -30,6 +30,13 @@
       tags: ['common', 'flatpak']
   tags: ['common', 'flatpak']
 
+- name: (LIGHTDM) Configure display manager
+  ansible.builtin.include_tasks:
+    file: configure_lightdm.yaml
+    apply:
+      tags: ['common', 'lightdm']
+  tags: ['common', 'lightdm']
+
 - name: (USER) Configure user environment
   ansible.builtin.include_tasks:
     file: configure_user.yaml

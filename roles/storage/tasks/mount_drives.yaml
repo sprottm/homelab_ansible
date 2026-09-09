@@ -1,26 +1,16 @@
 # Setup my Direct-Attached Storage (DAS) solution
 ---
-- name: (STORAGE) Create mountpoint directories
-  become: true
-  ansible.builtin.file:
-    path: "{{ mountpoint }}"
-    state: directory
-    mode: '0755'  
-  loop:
-    - '/backup'
-  loop_control:
-    loop_var: mountpoint
-
 - name: (STORAGE) Mount primary drives
   become: true
   ansible.posix.mount:
     path: "{{ mount.path }}"
     src: "{{ mount.src }}"
     fstype: "{{ mount.fs }}"
-    opts: rw
+    opts: rw,nofail
     state: mounted
   loop:
     - {src: 'LABEL=files', path: '/files', fs: 'btrfs'}
     - {src: 'LABEL=backupfiles', path: '/backup/files', fs: 'xfs'}
+    - {src: 'LABEL=passport', path: '/backup/passport', fs: 'xfs'}
   loop_control:
     loop_var: mount

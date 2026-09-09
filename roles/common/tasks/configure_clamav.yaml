@@ -1,5 +1,15 @@
 # Configure ClamAV to ensure new files are scanned
 ---
+- name: Ensure that the clamd config is in place
+  become: true
+  ansible.builtin.copy:
+    src: files/clamd.conf
+    dest: /etc/clamav/clamd.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
+
 - name: Ensure that the clamav database is being refreshed daily
   become: true
   ansible.builtin.service:

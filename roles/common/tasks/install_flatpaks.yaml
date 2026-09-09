@@ -1,5 +1,12 @@
 # Install flatpak applications for the systen
 ---
+- name: Allow users to run Flatpak sandboxes without root
+  become: true
+  ansible.posix.sysctl:
+    name: kernel.unprivileged_userns_clone
+    value: 1
+    state: present
+
 - name: Add the Flathub repository
   become: true
   community.general.flatpak_remote:
