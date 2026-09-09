@@ -109,10 +109,26 @@
 
 - name: Configure sysctl hardening
   become: true
-  ansible.builtin.copy:
-    src: "files/hardening/99-hardening.conf"
-    dest: "/etc/sysctl.d/99-hardening.conf"
-    owner: root
-    group: root
-    mode: '0644'
-  notify: Reload sysctl
+  ansible.posix.sysctl:
+    name: "{{ sysctl.entry }}"
+    value: "{{ sysctl.value }}"
+    state: present
+    reload: true
+    sysctl_file: /etc/sysctl.d/99-hardening.conf
+  loop:
+    - {entry: net.ipv4.conf.default.log_martians, value: 1}
+    - {entry: net.ipv4.conf.all.log_martians, value: 1}
+    - {entry: net.ipv4.conf.all.rp_filter, value: 1}
+    - {entry: net.ipv4.conf.all.send_redirects, value: 0}
+    - {entry: net.ipv4.conf.default.accept_redirects, value: 0}
+    - {entry: net.ipv4.conf.all.accept_redirects, value: 0}
+    - {entry: net.ipv6.conf.default.accept_redirects, value: 0}
+    - {entry: net.ipv6.conf.all.accept_redirects, value: 0}
+    - {entry: kernel.unprivileged_bpf_disabled, value: 1}
+    - {entry: kernel.sysrq, value: 0}
+    - {entry: fs.suid_dumpable, value: 0}
+    - {entry: fs.protected_regular, value: 2}
+    #- {entry: fs.protected_fifo, value: 2}
+    - {entry: dev.tty.ldisc_autoload, value: 0}
+  loop_control:
+    loop_var: sysctl
