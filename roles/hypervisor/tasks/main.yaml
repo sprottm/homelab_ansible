@@ -1,7 +1,7 @@
 # Ensure necessary services are enabled and started
 ---
-- name: Enable libvirtd socket
-  become: yes
+- name: (HYPERVISOR) Enable libvirtd socket
+  become: true
   ansible.builtin.service:
     name: "{{ systemd_unit }}"
     enabled: true
@@ -11,3 +11,4 @@
     - 'libvirtd.service'
   loop_control:
     loop_var: systemd_unit
+  tags: ['hypervisor']
