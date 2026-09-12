@@ -35,7 +35,7 @@
 
 - name: Configure Automount of gocryptfs for user
   become: true
-  template:
+  ansible.builtin.template:
     src: templates/pam_mount.conf.xml
     dest: /etc/security/pam_mount.conf.xml
     owner: "{{ user }}"
@@ -44,9 +44,46 @@
 
 - name: Configure Automount during login
   become: true
-  template:
+  ansible.builtin.template:
     src: files/pam/lightdm
     dest: /etc/pam.d/lightdm
     owner: root
     group: root
     mode: '0644'
+
+- name: Set my XFCE4 config 
+  community.general.xfconf:
+    channel: "{{ xfconf.ch }}"
+    property: "{{ xfconf.prop }}"
+    value: "{{ xfconf.value }}"
+    value_type: "{{ xfconf.type }}"
+    state: present
+  loop:
+    - ch: 'xsettings'
+      prop: '/Gdk/WindowScalingFactor'
+      type: 'int'
+      value: '2'
+    - ch: 'xsettings'
+      prop: '/Net/ThemeName'
+      type: 'string'
+      value: 'Adwaita-dark'
+    - ch: 'xsettings'
+      prop: '/Net/IconThemeName'
+      type: 'string'
+      value: 'HighContrast'
+    - ch: 'xsettings'
+      prop: '/Gtk/CursorThemeSize'
+      type: 'int'
+      value: '50'
+  loop_control:
+    loop_var: xfconf
+
+- name: Remove any panels besides my primary panel
+  community.general.xfconf:
+    channel: "xfce4-panel"
+    property: "/panels"
+    value_type: "int"
+    value: [1]
+    force_array: true
+    state: present
+  notify: Restart xfce4-panel

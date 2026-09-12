@@ -35,3 +35,6 @@
 - name: Reload sysctl
   become: true
   ansible.builtin.shell: sysctl --system
+
+- name: Restart xfce4-panel
+  ansible.builtin.shell: "xfce4-panel -r"
