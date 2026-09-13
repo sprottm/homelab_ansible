@@ -8,16 +8,29 @@
     success_msg: "Arch package lists were defined"
     fail_msg: "Arch package lists were not defined"
 
-- name: Sync pacman.conf
+- name: Configure the Pacman config file
   become: true
-  ansible.builtin.copy:
-    src: files/arch/pacman.conf
-    dest: /etc/pacman.conf
+  community.general.ini_file:
+    path: /etc/pacman.conf
+    section: "{{ pacman_conf.section }}"
+    option: "{{ pacman_conf.option }}"
+    value: "{{ pacman_conf.value }}"
+    create: true
     owner: root
     group: root
     mode: '0644'
-    backup: true
-    validate: pacman-conf --config=%s
+  loop:
+    - section: 'multilib'
+      option: 'Include'
+      value: '/etc/pacman.d/mirrorlist'
+    - section: 'aur'
+      option: 'SigLevel'
+      value: 'Never'
+    - section: 'aur'
+      option: 'Server'
+      value: 'file:///files/aur'
+  loop_control:
+    loop_var: pacman_conf
 
 - name: Install common packages
   become: true
@@ -32,5 +45,4 @@
     name: "{{ arch_graphical_pkgs }}"
     state: present
     update_cache: false
-  when:
-    - graphics_enabled
+  when: ['graphics_enabled']

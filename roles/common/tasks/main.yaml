@@ -36,6 +36,7 @@
     apply:
       tags: ['common', 'lightdm']
   tags: ['common', 'lightdm']
+  when: ['graphics_enabled']
 
 - name: (USER) Configure user environment
   ansible.builtin.include_tasks:
